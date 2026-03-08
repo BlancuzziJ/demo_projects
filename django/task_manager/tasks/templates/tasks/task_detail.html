@@ -1,0 +1,30 @@
+{% extends "tasks/base.html" %}
+
+{% block title %}{{ task.title }}{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 600px;">
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <h4 class="mb-0">{{ task.title }}</h4>
+    <span class="badge
+      {% if task.priority == 'high' %}bg-danger
+      {% elif task.priority == 'medium' %}bg-warning text-dark
+      {% else %}bg-secondary{% endif %}">
+      {{ task.get_priority_display }}
+    </span>
+  </div>
+  <div class="card-body">
+    <p>{{ task.description|default:"No description provided." }}</p>
+    <ul class="list-unstyled mb-0">
+      <li><strong>Due:</strong> {{ task.due_date|default:"Not set" }}</li>
+      <li><strong>Status:</strong> {% if task.completed %}✓ Completed{% else %}Pending{% endif %}</li>
+      <li><strong>Created:</strong> {{ task.created_at|date:"N j, Y" }}</li>
+    </ul>
+  </div>
+  <div class="card-footer">
+    <a href="{% url 'task-update' task.pk %}" class="btn btn-primary btn-sm">Edit</a>
+    <a href="{% url 'task-delete' task.pk %}" class="btn btn-danger btn-sm">Delete</a>
+    <a href="{% url 'task-list' %}" class="btn btn-secondary btn-sm">Back</a>
+  </div>
+</div>
+{% endblock %}
