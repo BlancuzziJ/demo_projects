@@ -1,0 +1,52 @@
+{% extends "tasks/base.html" %}
+
+{% block title %}All Tasks{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Tasks</h1>
+
+{% if tasks %}
+<table class="table table-hover">
+  <thead class="table-dark">
+    <tr>
+      <th>Title</th>
+      <th>Priority</th>
+      <th>Due Date</th>
+      <th>Status</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for task in tasks %}
+    <tr class="{% if task.completed %}table-secondary{% endif %}">
+      <td>
+        <a href="{% url 'task-detail' task.pk %}">{{ task.title }}</a>
+      </td>
+      <td>
+        <span class="badge
+          {% if task.priority == 'high' %}bg-danger
+          {% elif task.priority == 'medium' %}bg-warning text-dark
+          {% else %}bg-secondary{% endif %}">
+          {{ task.get_priority_display }}
+        </span>
+      </td>
+      <td>{{ task.due_date|default:"—" }}</td>
+      <td>
+        {% if task.completed %}
+          <span class="text-muted">✓ Done</span>
+        {% else %}
+          <span class="text-success">Pending</span>
+        {% endif %}
+      </td>
+      <td>
+        <a href="{% url 'task-update' task.pk %}" class="btn btn-sm btn-outline-primary">Edit</a>
+        <a href="{% url 'task-delete' task.pk %}" class="btn btn-sm btn-outline-danger">Delete</a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+  <p class="text-muted">No tasks yet. <a href="{% url 'task-create' %}">Create one!</a></p>
+{% endif %}
+{% endblock %}
